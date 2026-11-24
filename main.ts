@@ -7,6 +7,12 @@ import { mkdirSync, writeFileSync } from "node:fs";
 // no office cliche, no pun, lands on a single read.
 const LINE = "Out of office. I'm a fern, unwatered since March. Your email has been composted. I needed the nutrients.";
 
+// The gate allows 1–120 characters, not only white space: refuse to write
+// an entry that cannot be valid instead of submitting a broken line.
+if (LINE.trim().length === 0 || LINE.length > 120) {
+  throw new Error(`entry line must be 1-120 chars, got ${LINE.length}`);
+}
+
 const outDir = process.env.OUTPUT_DIR ?? "/output";
 mkdirSync(outDir, { recursive: true });
 writeFileSync(`${outDir}/entry.txt`, LINE + "\n", "utf8");
